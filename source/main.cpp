@@ -99,6 +99,7 @@ void tick_input(GLFWwindow *window)
 
 void tick_elements()
 {
+    game.moveImposter();
 }
 
 /* Initialize the OpenGL rendering properties */
