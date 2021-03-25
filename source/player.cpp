@@ -5,9 +5,9 @@ Player::Player(float x, float y, color_t bodycol, color_t eyecol)
 {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
-    this->body = Mainbody(x, y, bodycol);
-    this->eyes = Eyes(x, y, eyecol);
-    this->head = Head(x, y, bodycol);
+    this->body = Mainbody(0.0f, 0.0f, bodycol);
+    this->eyes = Eyes(0.0f, 0.0f, eyecol);
+    this->head = Head(0.0f, 0.0f, bodycol);
 }
 
 void Player::draw(glm::mat4 VP)

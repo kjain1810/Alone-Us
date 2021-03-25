@@ -19,8 +19,8 @@ Game game;
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 
-float move_x = 0.02;
-float move_y = 0.02;
+float move_x = 0.05;
+float move_y = 0.05;
 
 Timer t60(1.0 / 60);
 
@@ -62,30 +62,38 @@ void tick_input(GLFWwindow *window)
     if (left)
     {
         // move things to the left
-        camera.eye.x -= move_x;
-        camera.target.x -= move_x;
-        game.movePlayer(-move_x, 0);
+        if (game.movePlayer(-move_x, 0))
+        {
+            camera.eye.x -= move_x;
+            camera.target.x -= move_x;
+        }
     }
     if (right)
     {
         // move things to the right
-        camera.eye.x += move_x;
-        camera.target.x += move_x;
-        game.movePlayer(move_x, 0);
+        if (game.movePlayer(move_x, 0))
+        {
+            camera.eye.x += move_x;
+            camera.target.x += move_x;
+        }
     }
     if (up)
     {
         // move things up
-        camera.eye.y += move_y;
-        camera.target.y += move_y;
-        game.movePlayer(0, move_y);
+        if (game.movePlayer(0, move_y))
+        {
+            camera.eye.y += move_y;
+            camera.target.y += move_y;
+        }
     }
     if (down)
     {
         // move things down
-        camera.eye.y -= move_y;
-        camera.target.y -= move_y;
-        game.movePlayer(0, -move_y);
+        if (game.movePlayer(0, -move_y))
+        {
+            camera.eye.y -= move_y;
+            camera.target.y -= move_y;
+        }
     }
 }
 
@@ -100,10 +108,10 @@ void initGL(GLFWwindow *window, int width, int height)
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    game = Game(12, 12, COLOR_PINK, COLOR_RED, COLOR_BLACK, COLOR_WHITE);
-    camera.eye = glm::vec3(0, 0, 5);
-    camera.target = glm::vec3(0, 0, 0);
-    camera.up = glm::vec3(0, 1, 0);
+    game = Game(12, 12, COLOR_PURPLE, COLOR_RED, COLOR_BLACK, COLOR_WHITE);
+    camera.eye = glm::vec3(0.0f, -12.0f, 5.0f);
+    camera.target = glm::vec3(0.0f, -12.0f, 0.0f);
+    camera.up = glm::vec3(0.0f, 1.0f, 0.0f);
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders("../source/shaders/shader.vert", "../source/shaders/shader.frag");
     // Get a handle for our "MVP" uniform
@@ -112,7 +120,7 @@ void initGL(GLFWwindow *window, int width, int height)
     reshapeWindow(window, width, height);
 
     // Background color of the scene
-    glClearColor(COLOR_WHITE.r / 256.0, COLOR_WHITE.g / 256.0, COLOR_WHITE.b / 256.0, 0.0f); // R, G, B, A
+    glClearColor(COLOR_GREY.r / 256.0, COLOR_GREY.g / 256.0, COLOR_GREY.b / 256.0, 0.0f); // R, G, B, A
     glClearDepth(1.0f);
 
     glEnable(GL_DEPTH_TEST);
@@ -160,8 +168,7 @@ int main(int argc, char **argv)
 
 bool detect_collision(bounding_box_t a, bounding_box_t b)
 {
-    return (abs(a.x - b.x) * 2 < (a.width + b.width)) &&
-           (abs(a.y - b.y) * 2 < (a.height + b.height));
+    return (a.x + a.width >= b.x) && (b.x + b.width >= a.x) && (a.y + a.height >= b.y) && (b.y + b.height >= a.y);
 }
 
 void reset_screen()

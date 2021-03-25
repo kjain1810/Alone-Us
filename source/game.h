@@ -12,7 +12,7 @@ public:
     Game() {}
     Game(float height, float width, color_t, color_t, color_t, color_t);
     void draw(glm::mat4);
-    void movePlayer(float, float);
+    bool movePlayer(float, float);
     Player player;
     Player imposter;
 

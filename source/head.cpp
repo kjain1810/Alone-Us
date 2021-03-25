@@ -11,7 +11,6 @@ Head::Head(float x, float y, color_t color)
         vertex_buffer_data[3 * a] = 0.09 * glm::cos(a * M_PI / 100);            // X coord
         vertex_buffer_data[3 * a + 1] = 0.15f + 0.1 * glm::sin(a * M_PI / 100); // Y coord
         vertex_buffer_data[3 * a + 2] = 0.0f;                                   // Z coord
-        std::cout << vertex_buffer_data[3 * a] << " " << vertex_buffer_data[3 * a + 1] << " " << vertex_buffer_data[3 * a + 2] << "\n";
     }
     GLfloat all_vertex_buffer_data[99 * 3 * 3];
     for (int a = 0; a < 99; a++)
