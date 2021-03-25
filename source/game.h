@@ -16,6 +16,9 @@ public:
     void moveImposter();
     Player player;
     Player imposter;
+    int playerHealth;
+    void decreaseHealth();
+    bool checkContinue();
 
 private:
     Maze maze;

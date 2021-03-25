@@ -16,6 +16,8 @@ GLFWwindow *window;
 
 Game game;
 
+int timer = 0;
+
 float screen_zoom = 1, screen_center_x = 0, screen_center_y = 0;
 float camera_rotation_angle = 0;
 
@@ -100,6 +102,18 @@ void tick_input(GLFWwindow *window)
 void tick_elements()
 {
     game.moveImposter();
+    timer++;
+    if (timer == 60)
+    {
+        timer = 0;
+        game.decreaseHealth();
+    }
+    if (game.checkContinue() == false)
+    {
+        std::cout << "GAME OVER, MAKE SPECIAL SCREENS!\n";
+        sleep(5);
+        exit(0);
+    }
 }
 
 /* Initialize the OpenGL rendering properties */

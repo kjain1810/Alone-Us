@@ -8,6 +8,7 @@ Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t
     this->width = width;
     this->player = Player(0, -11.75f, pbodycol, peyecol);
     this->imposter = Player(-11.75f, 4.0f, ibodycol, ieyecol);
+    this->playerHealth = 100;
 }
 
 void Game::draw(glm::mat4 VP)
@@ -78,4 +79,27 @@ void Game::moveImposter()
     }
     if (flag_y)
         this->imposter.move(0, y_hat);
+}
+
+void Game::decreaseHealth()
+{
+    this->playerHealth -= 1;
+}
+
+bool Game::checkContinue()
+{
+    if (this->playerHealth <= 0)
+        return false;
+    bounding_box_t playerbb, imposterbb;
+    playerbb.x = this->player.position.x - 0.15f;
+    playerbb.y = this->player.position.y - 0.24f;
+    playerbb.height = 0.49f;
+    playerbb.width = 0.3f;
+    imposterbb.x = this->imposter.position.x - 0.15f;
+    imposterbb.y = this->imposter.position.y - 0.24f;
+    imposterbb.height = 0.49f;
+    imposterbb.width = 0.3f;
+    if (detect_collision(playerbb, imposterbb))
+        return false;
+    return true;
 }
