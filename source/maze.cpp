@@ -1,7 +1,7 @@
 #include "main.h"
 #include "maze.h"
 
-Maze::Maze(int height, int width)
+Maze::Maze(float height, float width)
 {
     this->height = height;
     this->width = width;

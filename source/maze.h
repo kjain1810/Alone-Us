@@ -7,7 +7,7 @@ class Maze
 {
 public:
     Maze() {}
-    Maze(int, int);
+    Maze(float, float);
     glm::vec3 position;
     float rotation;
     void draw(glm::mat4);

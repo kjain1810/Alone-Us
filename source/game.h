@@ -10,14 +10,14 @@ class Game
 {
 public:
     Game() {}
-    Game(int height, int width);
+    Game(float height, float width);
     void draw(glm::mat4);
     void movePlayer(float, float);
     Player player;
 
 private:
     Maze maze;
-    int height, width;
+    float height, width;
 };
 
 #endif

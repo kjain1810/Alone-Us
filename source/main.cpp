@@ -62,30 +62,30 @@ void tick_input(GLFWwindow *window)
     if (left)
     {
         // move things to the left
-        camera.eye.x += move_x;
-        camera.target.x += move_x;
-        game.movePlayer(move_x, 0);
-    }
-    if (right)
-    {
-        // move things to the right
         camera.eye.x -= move_x;
         camera.target.x -= move_x;
         game.movePlayer(-move_x, 0);
     }
+    if (right)
+    {
+        // move things to the right
+        camera.eye.x += move_x;
+        camera.target.x += move_x;
+        game.movePlayer(move_x, 0);
+    }
     if (up)
     {
         // move things up
-        camera.eye.y -= move_y;
-        camera.target.y -= move_y;
-        game.movePlayer(0, -move_y);
+        camera.eye.y += move_y;
+        camera.target.y += move_y;
+        game.movePlayer(0, move_y);
     }
     if (down)
     {
         // move things down
-        camera.eye.y += move_y;
-        camera.target.y += move_y;
-        game.movePlayer(0, move_y);
+        camera.eye.y -= move_y;
+        camera.target.y -= move_y;
+        game.movePlayer(0, -move_y);
     }
 }
 

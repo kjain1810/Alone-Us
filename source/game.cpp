@@ -1,7 +1,7 @@
 #include "game.h"
 #include "main.h"
 
-Game::Game(int height, int width)
+Game::Game(float height, float width)
 {
     this->maze = Maze(height, width);
     this->height = height;
