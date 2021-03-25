@@ -1,6 +1,6 @@
 #include "eyes.h"
 
-Eyes::Eyes(float x, float y)
+Eyes::Eyes(float x, float y, color_t color)
 {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
@@ -13,7 +13,7 @@ Eyes::Eyes(float x, float y)
         0.15f, 0.08f, 0.0f, // eyes end
     };
 
-    this->object = create3DObject(GL_TRIANGLES, 2 * 3, vertex_buffer_data, COLOR_GREEN, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLES, 2 * 3, vertex_buffer_data, color, GL_FILL);
 }
 
 void Eyes::draw(glm::mat4 VP, glm::vec3 position)

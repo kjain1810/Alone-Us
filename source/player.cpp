@@ -1,13 +1,13 @@
 #include "player.h"
 #include <vector>
 
-Player::Player(float x, float y)
+Player::Player(float x, float y, color_t bodycol, color_t eyecol)
 {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
-    this->body = Mainbody(x, y);
-    this->eyes = Eyes(x, y);
-    this->head = Head(x, y);
+    this->body = Mainbody(x, y, bodycol);
+    this->eyes = Eyes(x, y, eyecol);
+    this->head = Head(x, y, bodycol);
 }
 
 void Player::draw(glm::mat4 VP)

@@ -1,6 +1,6 @@
 #include "head.h"
 
-Head::Head(float x, float y)
+Head::Head(float x, float y, color_t color)
 {
     this->position = glm::vec3(x, y, 0);
     this->rotation = 0;
@@ -27,7 +27,7 @@ Head::Head(float x, float y)
         all_vertex_buffer_data[9 * a + 8] = 0.0f;
     }
 
-    this->object = create3DObject(GL_TRIANGLE_FAN, 99 * 3, vertex_buffer_data, COLOR_BLACK, GL_FILL);
+    this->object = create3DObject(GL_TRIANGLE_FAN, 99 * 3, vertex_buffer_data, color, GL_FILL);
 }
 
 void Head::draw(glm::mat4 VP, glm::vec3 position)

@@ -7,7 +7,7 @@ class Eyes
 {
 public:
     Eyes() {}
-    Eyes(float, float);
+    Eyes(float, float, color_t);
     glm::vec3 position;
     float rotation;
     void draw(glm::mat4, glm::vec3);

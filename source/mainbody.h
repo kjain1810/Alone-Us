@@ -7,7 +7,7 @@ class Mainbody
 {
 public:
     Mainbody() {}
-    Mainbody(float, float);
+    Mainbody(float, float, color_t);
     glm::vec3 position;
     float rotation;
     void draw(glm::mat4, glm::vec3);

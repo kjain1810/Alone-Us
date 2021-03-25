@@ -100,7 +100,7 @@ void initGL(GLFWwindow *window, int width, int height)
     /* Objects should be created before any other gl function and shaders */
     // Create the models
 
-    game = Game(12, 12);
+    game = Game(12, 12, COLOR_PINK, COLOR_RED, COLOR_BLACK, COLOR_WHITE);
     camera.eye = glm::vec3(0, 0, 5);
     camera.target = glm::vec3(0, 0, 0);
     camera.up = glm::vec3(0, 1, 0);
@@ -112,7 +112,7 @@ void initGL(GLFWwindow *window, int width, int height)
     reshapeWindow(window, width, height);
 
     // Background color of the scene
-    glClearColor(COLOR_BACKGROUND.r / 256.0, COLOR_BACKGROUND.g / 256.0, COLOR_BACKGROUND.b / 256.0, 0.0f); // R, G, B, A
+    glClearColor(COLOR_WHITE.r / 256.0, COLOR_WHITE.g / 256.0, COLOR_WHITE.b / 256.0, 0.0f); // R, G, B, A
     glClearDepth(1.0f);
 
     glEnable(GL_DEPTH_TEST);

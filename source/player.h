@@ -11,7 +11,7 @@ class Player
 {
 public:
     Player() {}
-    Player(float, float);
+    Player(float, float, color_t, color_t);
     glm::vec3 position;
     float rotation;
     void draw(glm::mat4);
