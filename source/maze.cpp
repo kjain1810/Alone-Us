@@ -3,9 +3,11 @@
 
 #include <vector>
 #include <random>
+#include <time.h>
 
 Maze::Maze(float height, float width)
 {
+    srand(time(NULL));
     this->height = height;
     this->width = width;
     this->position = glm::vec3(0, 0, 0);
@@ -53,13 +55,37 @@ Maze::Maze(float height, float width)
     for (int a = 0; a < 3; a++)
         for (int b = 0; b < 4; b++)
         {
-            if (a == 1 && b == 3)
+            if (a == 1 && (b == 3 || b == 0))
                 continue;
             float side = 1.0f + ((float)(std::rand() % 700)) / 1000.0f;
             vert1 = glm::vec3(X_small_1[a] - side / 2.0f, Y_small_1[b] - side / 2.0f, 0.0f);
             vert2 = glm::vec3(X_small_1[a] - side / 2.0f, Y_small_1[b] + side / 2.0f, 0.0f);
             vert3 = glm::vec3(X_small_1[a] + side / 2.0f, Y_small_1[b] + side / 2.0f, 0.0f);
             vert4 = glm::vec3(X_small_1[a] + side / 2.0f, Y_small_1[b] - side / 2.0f, 0.0f);
+            this->createSquare(vert1, vert2, vert3, vert4, vec);
+        }
+    float X_small_2[] = {12, 4, -4, -12}, Y_small_2[] = {-8, 0, 8};
+    for (int a = 0; a < 4; a++)
+        for (int b = 0; b < 3; b++)
+        {
+            if (a == 3 && b == 1)
+                continue;
+            float side = 1.0f + ((float)(std::rand() % 700)) / 1000.0f;
+            vert1 = glm::vec3(X_small_2[a] - side / 2.0f, Y_small_2[b] - side / 2.0f, 0.0f);
+            vert2 = glm::vec3(X_small_2[a] - side / 2.0f, Y_small_2[b] + side / 2.0f, 0.0f);
+            vert3 = glm::vec3(X_small_2[a] + side / 2.0f, Y_small_2[b] + side / 2.0f, 0.0f);
+            vert4 = glm::vec3(X_small_2[a] + side / 2.0f, Y_small_2[b] - side / 2.0f, 0.0f);
+            this->createSquare(vert1, vert2, vert3, vert4, vec);
+        }
+    float X_small_3[] = {-8, 0, 8}, Y_small_3[] = {-8, 0, 8};
+    for (int a = 0; a < 3; a++)
+        for (int b = 0; b < 3; b++)
+        {
+            float side = 0.5f + ((float)(std::rand() % 500)) / 1000.0f;
+            vert1 = glm::vec3(X_small_3[a] - side / 2.0f, Y_small_3[b] - side / 2.0f, 0.0f);
+            vert2 = glm::vec3(X_small_3[a] - side / 2.0f, Y_small_3[b] + side / 2.0f, 0.0f);
+            vert3 = glm::vec3(X_small_3[a] + side / 2.0f, Y_small_3[b] + side / 2.0f, 0.0f);
+            vert4 = glm::vec3(X_small_3[a] + side / 2.0f, Y_small_3[b] - side / 2.0f, 0.0f);
             this->createSquare(vert1, vert2, vert3, vert4, vec);
         }
     GLfloat vertex_buffer_data[3 * vec.size()];
