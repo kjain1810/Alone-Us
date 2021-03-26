@@ -61,6 +61,7 @@ void tick_input(GLFWwindow *window)
     int right = glfwGetKey(window, GLFW_KEY_RIGHT);
     int up = glfwGetKey(window, GLFW_KEY_UP);
     int down = glfwGetKey(window, GLFW_KEY_DOWN);
+    int p = glfwGetKey(window, GLFW_KEY_P);
     if (left)
     {
         // move things to the left
@@ -97,20 +98,37 @@ void tick_input(GLFWwindow *window)
             camera.target.y -= move_y;
         }
     }
+    if (p)
+    {
+        game.pressButtons();
+    }
 }
 
 void tick_elements()
 {
-    game.moveImposter();
+    // game.moveImposter();
     timer++;
     if (timer == 60)
     {
         timer = 0;
         game.decreaseHealth();
     }
-    if (game.checkContinue() == false)
+    int checkContinue = game.checkContinue();
+    if (checkContinue == 1)
     {
-        std::cout << "GAME OVER, MAKE SPECIAL SCREENS!\n";
+        std::cout << "RAN OUT OF HEALTH, GAME OVER, MAKE SPECIAL SCREENS!\n";
+        sleep(5);
+        exit(0);
+    }
+    if (checkContinue == 2)
+    {
+        std::cout << "CAUGHT BY IMPOSTER, GAME OVER, MAKE SPECIAL SCREENS!\n";
+        sleep(5);
+        exit(0);
+    }
+    if (checkContinue == 3)
+    {
+        std::cout << "REACHED EXIT, WON THE GAME, MAKE SPECIAL SCREEN!\n";
         sleep(5);
         exit(0);
     }

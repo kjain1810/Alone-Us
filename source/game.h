@@ -5,6 +5,8 @@
 
 #include "maze.h"
 #include "player.h"
+#include "entryexit.h"
+#include "buttons.h"
 
 class Game
 {
@@ -17,11 +19,17 @@ public:
     Player player;
     Player imposter;
     int playerHealth;
+    int tasksDone;
+    int imposterAlive;
     void decreaseHealth();
-    bool checkContinue();
+    int checkContinue();
+    void pressButtons();
 
 private:
     Maze maze;
+    EntryExit entry;
+    EntryExit exit;
+    Buttons killImposter;
     float height, width;
 };
 

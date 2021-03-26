@@ -4,18 +4,27 @@
 Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t ibodycol, color_t ieyecol)
 {
     this->maze = Maze(height, width);
+    this->entry = EntryExit(-0.75f, -12.0f);
+    this->exit = EntryExit(-0.75f, 11.0f);
+    this->killImposter = Buttons(-11.0f, 0.0f);
     this->height = height;
     this->width = width;
     this->player = Player(0, -11.75f, pbodycol, peyecol);
     this->imposter = Player(-11.75f, 4.0f, ibodycol, ieyecol);
     this->playerHealth = 100;
+    this->tasksDone = 0;
+    this->imposterAlive = 1;
 }
 
 void Game::draw(glm::mat4 VP)
 {
     this->maze.draw(VP);
+    this->entry.draw(VP);
+    this->exit.draw(VP);
+    this->killImposter.draw(VP);
     this->player.draw(VP);
-    this->imposter.draw(VP);
+    if (this->imposterAlive)
+        this->imposter.draw(VP);
 }
 
 bool Game::movePlayer(float x, float y)
@@ -86,10 +95,12 @@ void Game::decreaseHealth()
     this->playerHealth -= 1;
 }
 
-bool Game::checkContinue()
+int Game::checkContinue()
 {
+    // Player health!!
     if (this->playerHealth <= 0)
-        return false;
+        return 1;
+    // Caught by imposter
     bounding_box_t playerbb, imposterbb;
     playerbb.x = this->player.position.x - 0.15f;
     playerbb.y = this->player.position.y - 0.24f;
@@ -99,7 +110,41 @@ bool Game::checkContinue()
     imposterbb.y = this->imposter.position.y - 0.24f;
     imposterbb.height = 0.49f;
     imposterbb.width = 0.3f;
-    if (detect_collision(playerbb, imposterbb))
-        return false;
-    return true;
+    if (this->imposterAlive && detect_collision(playerbb, imposterbb))
+        return 2;
+    // Reached exit
+    bounding_box_t exitbb;
+    exitbb.x = this->exit.position.x;
+    exitbb.y = this->exit.position.y;
+    exitbb.width = 1.5f;
+    exitbb.height = 1.5f;
+    if (this->tasksDone == 2 && detect_collision(playerbb, exitbb))
+        return 3;
+    return 0;
+}
+
+void Game::pressButtons()
+{
+    bounding_box_t playerbb;
+    playerbb.x = this->player.position.x - 0.15f;
+    playerbb.y = this->player.position.y - 0.24f;
+    playerbb.height = 0.49f;
+    playerbb.width = 0.3f;
+    bool nearKillButton = false;
+    float distX = abs(this->killImposter.position.x - playerbb.x);
+    float distY = abs(this->killImposter.position.y - playerbb.y);
+    float radius = this->killImposter.radius;
+    if (distX > playerbb.width / 2 + radius || distY > playerbb.height / 2 + radius)
+        ;
+    else
+    {
+        float cornerdist = (distX - playerbb.width / 2) * (distX - playerbb.width / 2) + (distY - playerbb.height / 2) * (distY - playerbb.height / 2);
+        if (distX <= playerbb.width || distY <= playerbb.height || cornerdist <= radius * radius)
+            nearKillButton = true;
+    }
+    if (nearKillButton)
+    {
+        this->imposterAlive = false;
+        this->tasksDone += 1;
+    }
 }
