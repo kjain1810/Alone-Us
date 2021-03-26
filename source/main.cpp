@@ -100,12 +100,11 @@ void tick_input(GLFWwindow *window)
     }
     if (p)
         game.pressButtons();
-    std::cout << game.playerHealth << "\n";
 }
 
 void tick_elements()
 {
-    // game.moveImposter();
+    game.moveImposter();
     timer++;
     if (timer == 60)
     {

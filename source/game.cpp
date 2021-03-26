@@ -74,32 +74,34 @@ bool Game::movePlayer(float x, float y)
         if (detect_collision(playerbb, wall))
             return false;
     }
-    for (int a = 0; a < this->numPowerups; a++)
-    {
-        wall.x = this->obstacle[a].position.x;
-        wall.y = this->obstacle[a].position.y;
-        wall.height = 1;
-        wall.width = 1;
-        if (detect_collision(playerbb, wall))
+    if (this->powerUpsActive)
+        for (int a = 0; a < this->numPowerups; a++)
         {
-            this->decreaseHealth();
-            return false;
+            wall.x = this->obstacle[a].position.x;
+            wall.y = this->obstacle[a].position.y;
+            wall.height = 1;
+            wall.width = 1;
+            if (detect_collision(playerbb, wall))
+            {
+                this->decreaseHealth();
+                return false;
+            }
         }
-    }
-    for (int a = 0; a < this->numPowerups; a++)
-    {
-        if (!this->coins[a].notTaken)
-            continue;
-        wall.x = this->coins[a].position.x;
-        wall.y = this->coins[a].position.y;
-        wall.height = 1;
-        wall.width = 1;
-        if (detect_collision(playerbb, wall))
+    if (this->powerUpsActive)
+        for (int a = 0; a < this->numPowerups; a++)
         {
-            this->coins[a].notTaken = false;
-            this->playerHealth += 5;
+            if (!this->coins[a].notTaken)
+                continue;
+            wall.x = this->coins[a].position.x;
+            wall.y = this->coins[a].position.y;
+            wall.height = 1;
+            wall.width = 1;
+            if (detect_collision(playerbb, wall))
+            {
+                this->coins[a].notTaken = false;
+                this->playerHealth += 5;
+            }
         }
-    }
     this->player.move(x, y);
     return true;
 }
@@ -128,6 +130,16 @@ void Game::moveImposter()
         if (detect_collision(imposterbb, wall))
             flag_x = false;
     }
+    if (this->powerUpsActive)
+        for (int a = 0; a < this->numPowerups; a++)
+        {
+            wall.x = this->obstacle[a].position.x;
+            wall.y = this->obstacle[a].position.y;
+            wall.height = 1;
+            wall.width = 1;
+            if (detect_collision(imposterbb, wall))
+                flag_x = false;
+        }
     if (flag_x)
         this->imposter.move(x_hat, 0);
     imposterbb.x = this->imposter.position.x - 0.15f;
@@ -142,6 +154,16 @@ void Game::moveImposter()
         if (detect_collision(imposterbb, wall))
             flag_y = false;
     }
+    if (this->powerUpsActive)
+        for (int a = 0; a < this->numPowerups; a++)
+        {
+            wall.x = this->obstacle[a].position.x;
+            wall.y = this->obstacle[a].position.y;
+            wall.height = 1;
+            wall.width = 1;
+            if (detect_collision(imposterbb, wall))
+                flag_x = false;
+        }
     if (flag_y)
         this->imposter.move(0, y_hat);
 }
