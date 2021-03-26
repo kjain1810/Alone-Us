@@ -28,6 +28,8 @@ public:
     int checkContinue();
     void pressButtons();
     int numPowerups;
+    int lightsOn;
+    void switchLights();
 
 private:
     Maze maze;

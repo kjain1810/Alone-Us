@@ -3,9 +3,12 @@
 #include "ball.h"
 #include "game.h"
 
+#include <time.h>
+
 using namespace std;
 
 GLMatrices Matrices;
+GLLighting Light;
 Camera camera;
 GLuint programID;
 GLFWwindow *window;
@@ -25,6 +28,8 @@ float move_x = 0.05;
 float move_y = 0.05;
 
 Timer t60(1.0 / 60);
+
+clock_t startTime, curTime, lightTime;
 
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
@@ -61,7 +66,8 @@ void tick_input(GLFWwindow *window)
     int right = glfwGetKey(window, GLFW_KEY_RIGHT);
     int up = glfwGetKey(window, GLFW_KEY_UP);
     int down = glfwGetKey(window, GLFW_KEY_DOWN);
-    int p = glfwGetKey(window, GLFW_KEY_P);
+    int a = glfwGetKey(window, GLFW_KEY_A);
+    int s = glfwGetKey(window, GLFW_KEY_S);
     if (left)
     {
         // move things to the left
@@ -98,14 +104,20 @@ void tick_input(GLFWwindow *window)
             camera.target.y -= move_y;
         }
     }
-    if (p)
+    if (a)
         game.pressButtons();
+    if (s && (curTime - lightTime) / CLOCKS_PER_SEC >= 1)
+    {
+        game.switchLights();
+        lightTime = curTime;
+    }
 }
 
 void tick_elements()
 {
     game.moveImposter();
     timer++;
+    curTime = clock();
     if (timer == 60)
     {
         timer = 0;
@@ -147,7 +159,8 @@ void initGL(GLFWwindow *window, int width, int height)
     programID = LoadShaders("../source/shaders/shader.vert", "../source/shaders/shader.frag");
     // Get a handle for our "MVP" uniform
     Matrices.MatrixID = glGetUniformLocation(programID, "MVP");
-
+    Light.LocationID = glGetUniformLocation(programID, "location");
+    Light.StatusID = glGetUniformLocation(programID, "status");
     reshapeWindow(window, width, height);
 
     // Background color of the scene
@@ -165,6 +178,7 @@ void initGL(GLFWwindow *window, int width, int height)
 
 int main(int argc, char **argv)
 {
+    startTime = clock();
     srand(time(0));
     int width = 1000;
     int height = 1000;
@@ -209,4 +223,23 @@ void reset_screen()
     float left = screen_center_x - 4 / screen_zoom;
     float right = screen_center_x + 4 / screen_zoom;
     Matrices.projection = glm::ortho(left, right, bottom, top, 0.1f, 500.0f);
+}
+
+bool circleRectIntersect(bounding_box_t playerbb, float radius, glm::vec3 center)
+{
+    float distX = abs(center.x - playerbb.x);
+    float distY = abs(center.y - playerbb.y);
+    if (distX > playerbb.width / 2 + radius || distY > playerbb.height / 2 + radius)
+        return false;
+    float cornerdist = (distX - playerbb.width / 2) * (distX - playerbb.width / 2) + (distY - playerbb.height / 2) * (distY - playerbb.height / 2);
+    if (distX <= playerbb.width || distY <= playerbb.height || cornerdist <= radius * radius)
+        return true;
+    return false;
+}
+
+bool check_inside(bounding_box_t a, bounding_box_t b)
+{
+    bool ret = (a.x <= b.x) && (a.x + a.width >= b.x + b.width) && (a.y <= b.y) && (a.y + a.height >= b.y + b.width);
+    ret |= (b.x <= a.x) && (b.x + b.width >= a.x + a.width) && (b.y <= a.y) && (b.y + b.height >= a.y + a.width);
+    return ret;
 }

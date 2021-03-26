@@ -70,6 +70,17 @@ struct Camera
     glm::vec3 up;
 };
 
+struct GLLighting
+{
+    glm::mat4 location;
+    int status;
+    GLuint LocationID;
+    GLuint StatusID;
+    GLfloat *loc;
+    int stat;
+};
+extern GLLighting Light;
+
 // ---- Logic ----
 
 enum direction_t
@@ -89,8 +100,11 @@ struct bounding_box_t
 };
 
 bool detect_collision(bounding_box_t a, bounding_box_t b);
+bool circleRectIntersect(bounding_box_t playerbb, float radius, glm::vec3 center);
+bool check_inside(bounding_box_t a, bounding_box_t b);
 
-extern float screen_zoom, screen_center_x, screen_center_y;
+extern float screen_zoom,
+    screen_center_x, screen_center_y;
 extern float move_x, move_y;
 void reset_screen();
 

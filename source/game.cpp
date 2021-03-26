@@ -4,24 +4,23 @@
 #include <random>
 #include <time.h>
 
-bool circleRectIntersect(bounding_box_t, float, glm::vec3);
-
 Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t ibodycol, color_t ieyecol)
 {
     srand(time(NULL));
     this->maze = Maze(height, width);
     this->entry = EntryExit(-0.75f, -12.0f);
     this->exit = EntryExit(-0.75f, 11.0f);
-    this->killImposter = Buttons(-11.0f, 0.0f);
-    this->powerUps = Buttons(11.0f, 0.0f);
+    this->killImposter = Buttons(-11.0f, 0.0f); // need to randomiz
+    this->powerUps = Buttons(11.0f, 0.0f);      // need to randomize
     this->height = height;
     this->width = width;
     this->player = Player(0, -11.75f, pbodycol, peyecol);
-    this->imposter = Player(-11.75f, 4.0f, ibodycol, ieyecol);
+    this->imposter = Player(-11.75f, 4.0f, ibodycol, ieyecol); // need to randomize
     this->playerHealth = 100;
     this->tasksDone = 0;
     this->imposterAlive = true;
     this->powerUpsActive = false;
+    this->lightsOn = 1;
     int idx = 0;
     for (int a = -12; a <= 4; a += 8)
     {
@@ -40,6 +39,10 @@ Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t
 
 void Game::draw(glm::mat4 VP)
 {
+    Light.stat = this->lightsOn;
+    Light.loc = &this->player.position[0];
+    // glUniform3fv(Light.LocationID, 1, &this->player.position[0]);
+    glUniform1i(Light.StatusID, this->lightsOn);
     this->maze.draw(VP);
     this->entry.draw(VP);
     this->exit.draw(VP);
@@ -170,7 +173,10 @@ void Game::moveImposter()
 
 void Game::decreaseHealth()
 {
-    this->playerHealth -= 1;
+    if (this->lightsOn)
+        this->playerHealth -= 1;
+    else
+        this->playerHealth += 1;
 }
 
 int Game::checkContinue()
@@ -196,7 +202,7 @@ int Game::checkContinue()
     exitbb.y = this->exit.position.y;
     exitbb.width = 1.5f;
     exitbb.height = 1.5f;
-    if (this->tasksDone == 2 && detect_collision(playerbb, exitbb))
+    if (this->tasksDone == 2 && check_inside(playerbb, exitbb))
         return 3;
     return 0;
 }
@@ -228,14 +234,7 @@ void Game::pressButtons()
     }
 }
 
-bool circleRectIntersect(bounding_box_t playerbb, float radius, glm::vec3 center)
+void Game::switchLights()
 {
-    float distX = abs(center.x - playerbb.x);
-    float distY = abs(center.y - playerbb.y);
-    if (distX > playerbb.width / 2 + radius || distY > playerbb.height / 2 + radius)
-        return false;
-    float cornerdist = (distX - playerbb.width / 2) * (distX - playerbb.width / 2) + (distY - playerbb.height / 2) * (distY - playerbb.height / 2);
-    if (distX <= playerbb.width || distY <= playerbb.height || cornerdist <= radius * radius)
-        return true;
-    return false;
+    this->lightsOn = (1 - this->lightsOn);
 }
