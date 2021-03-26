@@ -7,6 +7,8 @@
 #include "player.h"
 #include "entryexit.h"
 #include "buttons.h"
+#include "coins.h"
+#include "obstacles.h"
 
 class Game
 {
@@ -20,16 +22,21 @@ public:
     Player imposter;
     int playerHealth;
     int tasksDone;
-    int imposterAlive;
+    bool imposterAlive;
+    bool powerUpsActive;
     void decreaseHealth();
     int checkContinue();
     void pressButtons();
+    int numPowerups;
 
 private:
     Maze maze;
     EntryExit entry;
     EntryExit exit;
     Buttons killImposter;
+    Buttons powerUps;
+    Coin coins[10];
+    Obstacle obstacle[10];
     float height, width;
 };
 

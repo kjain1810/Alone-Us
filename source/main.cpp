@@ -99,9 +99,8 @@ void tick_input(GLFWwindow *window)
         }
     }
     if (p)
-    {
         game.pressButtons();
-    }
+    std::cout << game.playerHealth << "\n";
 }
 
 void tick_elements()

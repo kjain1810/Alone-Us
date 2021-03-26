@@ -11,3 +11,4 @@ const color_t COLOR_YELLOW = {245, 243, 115};
 const color_t COLOR_PURPLE = {186, 121, 242};
 const color_t COLOR_GREY = {182, 184, 186};
 const color_t COLOR_WALL = {0, 0, 0};
+const color_t COLOR_ORANGE = {252, 115, 3};
