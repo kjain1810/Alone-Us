@@ -10,5 +10,5 @@ const color_t COLOR_PINK = {238, 115, 245};
 const color_t COLOR_YELLOW = {245, 243, 115};
 const color_t COLOR_PURPLE = {186, 121, 242};
 const color_t COLOR_BLACK = {182, 184, 186};
-const color_t COLOR_WALL = {0, 0, 0};
+const color_t COLOR_WALL = {176, 134, 134};
 const color_t COLOR_ORANGE = {252, 115, 3};
