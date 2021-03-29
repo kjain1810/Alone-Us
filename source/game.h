@@ -30,6 +30,8 @@ public:
     int numPowerups;
     int lightsOn;
     void switchLights();
+    Buttons getButton(float, float);
+    Player getImposter(float, float, color_t, color_t);
 
 private:
     Maze maze;

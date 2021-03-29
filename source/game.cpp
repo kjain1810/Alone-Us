@@ -10,12 +10,13 @@ Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t
     this->maze = Maze(height, width);
     this->entry = EntryExit(-0.75f, -12.0f);
     this->exit = EntryExit(-0.75f, 11.0f);
-    this->killImposter = Buttons(-11.0f, 0.0f); // need to randomiz
-    this->powerUps = Buttons(11.0f, 0.0f);      // need to randomize
+    this->killImposter = this->getButton(-12.0f, -4.0f);
+    this->powerUps = this->getButton(4.0f, -4.0f);
     this->height = height;
     this->width = width;
     this->player = Player(0, -11.75f, pbodycol, peyecol);
-    this->imposter = Player(-11.75f, 4.0f, ibodycol, ieyecol); // need to randomize
+    this->imposter = getImposter(-4.0f, -4.0f, ibodycol, ieyecol);
+    // this->imposter = Player(-11.75f, 4.0f, ibodycol, ieyecol); // need to randomize
     this->playerHealth = 100;
     this->tasksDone = 0;
     this->imposterAlive = true;
@@ -237,4 +238,62 @@ void Game::pressButtons()
 void Game::switchLights()
 {
     this->lightsOn = (1 - this->lightsOn);
+}
+
+Buttons Game::getButton(float offsetx, float offsety)
+{
+    float x = ((float)(rand() % 8000)) / 1000.0 + offsetx;
+    float y = ((float)(rand() % 16000)) / 1000.0 + offsety;
+    bool correct = false;
+    bounding_box_t wall;
+    while (!correct)
+    {
+        correct = true;
+        for (int a = 0; a < this->maze.walls.size(); a++)
+        {
+            wall.x = this->maze.walls[a][0].x;
+            wall.y = this->maze.walls[a][0].y;
+            wall.height = this->maze.walls[a][1].y - this->maze.walls[a][0].y;
+            wall.width = this->maze.walls[a][2].x - this->maze.walls[a][1].x;
+            if (circleRectIntersect(wall, 0.25f, glm::vec3(x, y, 0.0)))
+            {
+                correct = false;
+                x = ((float)(rand() % 8000)) / 1000.0 + offsetx;
+                y = ((float)(rand() % 16000)) / 1000.0 + offsety;
+                break;
+            }
+        }
+    }
+    return Buttons(x, y);
+}
+
+Player Game::getImposter(float offsetx, float offsety, color_t bodycolor, color_t eyecolor)
+{
+    float x = ((float)(rand() % 8000)) / 1000.0 + offsetx;
+    float y = ((float)(rand() % 8000)) / 1000.0 + offsety;
+    bool correct = false;
+    bounding_box_t wall, imposter;
+    imposter.height = 0.49f;
+    imposter.width = 0.3f;
+    while (!correct)
+    {
+        correct = true;
+        imposter.x = x;
+        imposter.y = y;
+        for (int a = 0; a < this->maze.walls.size(); a++)
+        {
+            wall.x = this->maze.walls[a][0].x;
+            wall.y = this->maze.walls[a][0].y;
+            wall.height = this->maze.walls[a][1].y - this->maze.walls[a][0].y;
+            wall.width = this->maze.walls[a][2].x - this->maze.walls[a][1].x;
+            if (detect_collision(wall, imposter))
+            {
+                correct = false;
+                x = ((float)(rand() % 8000)) / 1000.0 + offsetx;
+                y = ((float)(rand() % 8000)) / 1000.0 + offsety;
+                break;
+            }
+        }
+    }
+    return Player(x, y, bodycolor, eyecolor);
 }
