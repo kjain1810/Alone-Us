@@ -10,6 +10,7 @@
 #include "coins.h"
 #include "obstacles.h"
 #include "hud.h"
+#include "gameover.h"
 
 class Game
 {
@@ -34,6 +35,8 @@ public:
     Buttons getButton(float, float);
     Player getImposter(float, float, color_t, color_t);
     HUD hud;
+    int gameStatus;
+    GameOver gameover;
 
 private:
     Maze maze;

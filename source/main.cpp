@@ -57,11 +57,22 @@ void draw()
     glm::mat4 MVP; // MVP = Projection * View * Model
 
     // Scene render
-    game.draw(VP);
+    if (game.gameStatus == 0)
+        game.draw(VP);
+    else
+    {
+        camera.eye = glm::vec3(0.0f, 0.0f, 5.0f);
+        camera.target = glm::vec3(0.0f, 0.0f, 0.0f);
+        Matrices.view = glm::lookAt(camera.eye, camera.target, camera.up); // Rotating Camera for 3D
+        glm::mat4 VP = Matrices.projection * Matrices.view;
+        game.gameover.draw(VP, game.gameStatus - 1);
+    }
 }
 
 void tick_input(GLFWwindow *window)
 {
+    if (game.gameStatus)
+        return;
     int left = glfwGetKey(window, GLFW_KEY_LEFT);
     int right = glfwGetKey(window, GLFW_KEY_RIGHT);
     int up = glfwGetKey(window, GLFW_KEY_UP);
@@ -115,6 +126,8 @@ void tick_input(GLFWwindow *window)
 
 void tick_elements()
 {
+    if (game.gameStatus)
+        return;
     game.moveImposter();
     timer++;
     curTime = clock();
@@ -123,25 +136,9 @@ void tick_elements()
         timer = 0;
         game.decreaseHealth();
     }
-    int checkContinue = game.checkContinue();
-    if (checkContinue == 1)
-    {
-        std::cout << "RAN OUT OF HEALTH, GAME OVER, MAKE SPECIAL SCREENS!\n";
-        sleep(5);
-        exit(0);
-    }
-    if (checkContinue == 2)
-    {
-        std::cout << "CAUGHT BY IMPOSTER, GAME OVER, MAKE SPECIAL SCREENS!\n";
-        sleep(5);
-        exit(0);
-    }
-    if (checkContinue == 3)
-    {
-        std::cout << "REACHED EXIT, WON THE GAME, MAKE SPECIAL SCREEN!\n";
-        sleep(5);
-        exit(0);
-    }
+    game.gameStatus = game.checkContinue();
+    if (game.gameStatus)
+        sleep(2);
 }
 
 /* Initialize the OpenGL rendering properties */

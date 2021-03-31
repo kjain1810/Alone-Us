@@ -21,6 +21,7 @@ Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t
     this->imposterAlive = true;
     this->powerUpsActive = false;
     this->lightsOn = 1;
+    this->gameStatus = 0;
     int idx = 0;
     for (int a = -12; a <= 4; a += 8)
     {
@@ -36,6 +37,7 @@ Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t
     }
     this->numPowerups = idx;
     this->hud = HUD(-4.0f, -9.0f, ibodycol, ieyecol);
+    this->gameover = GameOver(0, 0);
 }
 
 void Game::draw(glm::mat4 VP)
@@ -198,7 +200,7 @@ int Game::checkContinue()
     imposterbb.height = 0.49f;
     imposterbb.width = 0.3f;
     if (this->imposterAlive && detect_collision(playerbb, imposterbb))
-        return 2;
+        return 1;
     // Reached exit
     bounding_box_t exitbb;
     exitbb.x = this->exit.position.x;
@@ -206,7 +208,7 @@ int Game::checkContinue()
     exitbb.width = 1.5f;
     exitbb.height = 1.5f;
     if (this->tasksDone == 2 && check_inside(playerbb, exitbb))
-        return 3;
+        return 2;
     return 0;
 }
 
