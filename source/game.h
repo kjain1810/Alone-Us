@@ -9,6 +9,7 @@
 #include "buttons.h"
 #include "coins.h"
 #include "obstacles.h"
+#include "hud.h"
 
 class Game
 {
@@ -32,6 +33,7 @@ public:
     void switchLights();
     Buttons getButton(float, float);
     Player getImposter(float, float, color_t, color_t);
+    HUD hud;
 
 private:
     Maze maze;

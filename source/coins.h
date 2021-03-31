@@ -11,7 +11,7 @@ public:
     glm::vec3 position;
     float rotation;
     bool notTaken;
-    void draw(glm::mat4);
+    void draw(glm::mat4, float);
 
 private:
     VAO *object;

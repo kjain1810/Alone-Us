@@ -16,7 +16,6 @@ Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t
     this->width = width;
     this->player = Player(0, -11.75f, pbodycol, peyecol);
     this->imposter = getImposter(-4.0f, -4.0f, ibodycol, ieyecol);
-    // this->imposter = Player(-11.75f, 4.0f, ibodycol, ieyecol); // need to randomize
     this->playerHealth = 100;
     this->tasksDone = 0;
     this->imposterAlive = true;
@@ -36,13 +35,13 @@ Game::Game(float height, float width, color_t pbodycol, color_t peyecol, color_t
         }
     }
     this->numPowerups = idx;
+    this->hud = HUD(-4.0f, -9.0f, ibodycol, ieyecol);
 }
 
 void Game::draw(glm::mat4 VP)
 {
     Light.stat = this->lightsOn;
     Light.loc = &this->player.position[0];
-    // glUniform3fv(Light.LocationID, 1, &this->player.position[0]);
     glUniform1i(Light.StatusID, this->lightsOn);
     this->maze.draw(VP);
     this->entry.draw(VP);
@@ -53,12 +52,14 @@ void Game::draw(glm::mat4 VP)
         for (int a = 0; a < 9; a++)
         {
             if (this->coins[a].notTaken)
-                this->coins[a].draw(VP);
+                this->coins[a].draw(VP, 1.0f);
             this->obstacle[a].draw(VP);
         }
     this->player.draw(VP);
     if (this->imposterAlive)
         this->imposter.draw(VP);
+    glUniform1i(Light.StatusID, 1);
+    this->hud.draw(VP, this->playerHealth, !this->imposterAlive, this->powerUpsActive, this->lightsOn);
 }
 
 bool Game::movePlayer(float x, float y)
@@ -87,7 +88,7 @@ bool Game::movePlayer(float x, float y)
             wall.width = 1;
             if (detect_collision(playerbb, wall))
             {
-                this->decreaseHealth();
+                this->playerHealth -= 1;
                 return false;
             }
         }
@@ -107,6 +108,7 @@ bool Game::movePlayer(float x, float y)
             }
         }
     this->player.move(x, y);
+    this->hud.move(x, y);
     return true;
 }
 

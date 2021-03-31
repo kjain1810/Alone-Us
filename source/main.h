@@ -102,6 +102,7 @@ struct bounding_box_t
 bool detect_collision(bounding_box_t a, bounding_box_t b);
 bool circleRectIntersect(bounding_box_t playerbb, float radius, glm::vec3 center);
 bool check_inside(bounding_box_t a, bounding_box_t b);
+void addNumberEdges(std::vector<glm::vec2> &vec, int dig, float x, float y, float scale);
 
 extern float screen_zoom,
     screen_center_x, screen_center_y;
@@ -121,5 +122,6 @@ extern const color_t COLOR_PURPLE;
 extern const color_t COLOR_GREY;
 extern const color_t COLOR_WALL;
 extern const color_t COLOR_ORANGE;
+extern const color_t COLOR_HUD;
 
 #endif
